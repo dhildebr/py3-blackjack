@@ -9,7 +9,7 @@ class Deck():
   will return None.
   """
   
-  def __init__(self, init_shuffle = True):
+  def __init__(self):
     """
     Initializes this deck with the usual 52 cards, formed of the
     combinations of Card.CARD_RANKS and Card.CARD_SUITS. The deck will
