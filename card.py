@@ -1,27 +1,17 @@
+RANK_VALUES = (
+    ("Ace", 1),   ("Two", 2),    ("Three", 3), ("Four", 4), ("Five", 5),
+    ("Six", 6),   ("Seven", 7),  ("Eight", 8), ("Nine", 9), ("Ten", 10),
+    ("Jack", 10), ("Queen", 10), ("King", 10)
+)
+
+CARD_RANKS = tuple([rank for rank, value in RANK_VALUES])
+CARD_SUITS = ("Clubs", "Diamonds", "Hearts", "Spades")
+
 class Card():
   """
   A playing card from the standard 52-card deck. Cards have one of four
-  suits and one of thirteen ranks - an Ace is assumed to have a value of
-  one, though this may vary depending on the game played.
-  
-  Helpful constant attributes:
-  CARD_RANKS: A tuple of all possible card ranks - numbers two through
-  ten, aces, and the three standard face cards.
-  CARD_SUITS: A tuple of the four possible card suits - clubs, diamonds,
-  hearts, and spades.
-  RANK_VALUES: A tuple filled with further 2-tuples mapping each rank
-  name with its numerical value. The first element is the rank as a
-  string, and the second is an integer for the corresponding value.
+  suits and one of thirteen ranks.
   """
-  
-  RANK_VALUES = (
-      ("Ace", 1),   ("Two", 2),    ("Three", 3), ("Four", 4), ("Five", 5),
-      ("Six", 6),   ("Seven", 7),  ("Eight", 8), ("Nine", 9), ("Ten", 10),
-      ("Jack", 10), ("Queen", 10), ("King", 10)
-  )
-  
-  CARD_RANKS = tuple([rank for rank, value in RANK_VALUES])
-  CARD_SUITS = ("Clubs", "Diamonds", "Hearts", "Spades")
   
   def __init__(self, rank, suit):
     """
@@ -33,10 +23,10 @@ class Card():
     """
     
     caps_rank, caps_suit = rank.capitalize(), suit.capitalize()
-    self._rank = (caps_rank if (caps_rank in self.CARD_RANKS) else self.CARD_RANKS[0])
-    self._suit = (caps_suit if (caps_suit in self.CARD_SUITS) else self.CARD_SUITS[0])
-    for rnk, val in self.RANK_VALUES:
-      if rnk == self.rank:
+    self._rank = (caps_rank if (caps_rank in CARD_RANKS) else CARD_RANKS[0])
+    self._suit = (caps_suit if (caps_suit in CARD_SUITS) else CARD_SUITS[0])
+    for rnk, val in RANK_VALUES:
+      if rnk == self._rank:
         self._value = val
   
   def get_rank(self):
