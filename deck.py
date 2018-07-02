@@ -1,7 +1,5 @@
 import random
 
-import card
-
 from card import Card
 from card import CARD_RANKS
 from card import CARD_SUITS
@@ -43,8 +41,7 @@ class Deck():
       drawn = self._cards[self._num_cards_drawn]
       self._num_cards_drawn += 1
       return drawn
-    else:
-      return None
+    return None
 
 
 # If deck.py is used as the program entry point, prints out a random
@@ -55,7 +52,7 @@ if __name__ == "__main__":
   
   while not example_deck.is_empty():
     example_cards.append(example_deck.draw_card())
-  for offset in range(0, 52, 4):
+  for offset in range(0, len(example_cards), 4):
     print(
         str(example_cards[offset]).ljust(18),
         str(example_cards[offset + 1]).ljust(18),
