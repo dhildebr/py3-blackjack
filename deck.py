@@ -26,7 +26,7 @@ class Deck():
     """ Returns whether this deck is exhausted of cards. """
     return self._num_cards_drawn >= len(self._cards)
   
-  def shuffle(self):
+  def reshuffle(self):
     """ Shuffles this deck, effectively reconstructing it. """
     random.shuffle(self._cards)
     self._num_cards_drawn = 0

@@ -1,10 +1,10 @@
 RANK_VALUES = (
-    ("Ace", 1),   ("Two", 2),    ("Three", 3), ("Four", 4), ("Five", 5),
-    ("Six", 6),   ("Seven", 7),  ("Eight", 8), ("Nine", 9), ("Ten", 10),
-    ("Jack", 10), ("Queen", 10), ("King", 10)
+    ("Ace", 1, 11),   ("Two", 2, 2),     ("Three", 3, 3), ("Four", 4, 4), ("Five", 5, 5),
+    ("Six", 6, 6),    ("Seven", 7, 7),   ("Eight", 8, 8), ("Nine", 9, 9), ("Ten", 10, 10),
+    ("Jack", 10, 10), ("Queen", 10, 10), ("King", 10, 10)
 )
 
-CARD_RANKS = tuple([rank for rank, value in RANK_VALUES])
+CARD_RANKS = tuple([rank for rank, soft, hard in RANK_VALUES])
 CARD_SUITS = ("Clubs", "Diamonds", "Hearts", "Spades")
 
 class Card():
@@ -25,9 +25,6 @@ class Card():
     caps_rank, caps_suit = rank.capitalize(), suit.capitalize()
     self._rank = (caps_rank if (caps_rank in CARD_RANKS) else CARD_RANKS[0])
     self._suit = (caps_suit if (caps_suit in CARD_SUITS) else CARD_SUITS[0])
-    for rnk, val in RANK_VALUES:
-      if rnk == self._rank:
-        self._value = val
   
   def get_rank(self):
     """ Returns this card's rank as a string. """
@@ -37,9 +34,9 @@ class Card():
     """ Returns this card's suit as a string. """
     return self._suit
   
-  def get_value(self):
-    """ Returns this card's numerical value as an integer. """
-    return self._value
+  def is_ace(self):
+    """ Returns whether this card is an ace. """
+    return self._rank == "Ace"
   
   def __str__(self):
     """
