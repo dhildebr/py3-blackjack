@@ -19,17 +19,17 @@ class Deck():
     """
     
     self._cards = [Card(rank, suit) for rank in CARD_RANKS for suit in CARD_SUITS]
-    self._num_cards_drawn = 0
+    self._num_drawn = 0
     random.shuffle(self._cards)
   
   def is_empty(self):
     """ Returns whether this deck is exhausted of cards. """
-    return self._num_cards_drawn >= len(self._cards)
+    return self._num_drawn >= len(self._cards)
   
   def reshuffle(self):
     """ Shuffles this deck, effectively reconstructing it. """
     random.shuffle(self._cards)
-    self._num_cards_drawn = 0
+    self._num_drawn = 0
   
   def draw_card(self):
     """
@@ -38,8 +38,8 @@ class Deck():
     """
     
     if not self.is_empty():
-      drawn = self._cards[self._num_cards_drawn]
-      self._num_cards_drawn += 1
+      drawn = self._cards[self._num_drawn]
+      self._num_drawn += 1
       return drawn
     return None
 
