@@ -1,5 +1,17 @@
 """
-Foo bar baz qux.
+Contains a representation of a card from the standard deck of 52.
+At the root level are constants CARD_RANKS, which is a tuple of strings
+for all the ranks (such as aces or eights); amd CARD_SUITS, another
+tuple containing strings for all possible suits (such as diaonds or
+clubs.)
+
+The final root-level constant, RANK_VALUES, is a tuple containing nested
+3-tuples mapping each rank for its soft and hard values, such as
+("Ace", 1, 11). The outer tuple can thus be iterated over using tuple
+unpacking, such as the form:
+
+for rnk, sft, hrd in RANK_VALUES:
+  pass
 """
 
 RANK_VALUES = (
@@ -8,7 +20,7 @@ RANK_VALUES = (
     ("Jack", 10, 10), ("Queen", 10, 10), ("King", 10, 10)
 )
 
-CARD_RANKS = tuple([rank for rank, soft, hard in RANK_VALUES])
+CARD_RANKS = tuple([rnk for rnk, sft, hrd in RANK_VALUES])
 CARD_SUITS = ("Clubs", "Diamonds", "Hearts", "Spades")
 
 class Card(object):
@@ -40,16 +52,16 @@ class Card(object):
         super(Card, self).__setattr__("hard_value_", hrd)
     
     # Assign suit, defaulting to first if invalid
-    super(Card, self).__setattr__("suit_",
-        (caps_suit if (caps_suit in CARD_SUITS) else CARD_SUITS[0])
-    )
+    super(Card, self).__setattr__("suit_", (caps_suit if (caps_suit in CARD_SUITS) else CARD_SUITS[0]))
   
   def __getattribute__(self, attr):
+    """ Prevents the reading of private attributes. """
     if attr.startswith("_"):
       raise AttributeError(f"Attribute '{attr}' is inaccessible.")
     return super(Card, self).__getattribute__(attr)
   
   def __setattr__(self, key, value):
+    """ Prevents the overwriting of read-only attributes. """
     if key.endswith("_"):
       raise AttributeError(f"Attribute '{key}' cannot be overwritten.")
     super(Card, self).__setattr__(key, value)

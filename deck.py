@@ -1,10 +1,16 @@
+"""
+Contains a representation of a deck of the standard 52 cards. A deck's
+cards are shuffled at initialization and when manually re-shuffled, and
+cards afterwards are drawn in constant time.
+"""
+
 import random
 
 from card import Card
 from card import CARD_RANKS
 from card import CARD_SUITS
 
-class Deck():
+class Deck(object):
   """
   A standard deck of 52 cards. Drawing from the desk will return
   instances of Card until the deck is exhausted, after which doing so
@@ -22,9 +28,13 @@ class Deck():
     self._num_drawn = 0
     random.shuffle(self._cards)
   
+  def __len__(self):
+    """ Returns the number of cards left in the deck """
+    return len(self._cards) - self._num_drawn
+  
   def is_empty(self):
     """ Returns whether this deck is exhausted of cards. """
-    return self._num_drawn >= len(self._cards)
+    return len(self) <= 0
   
   def reshuffle(self):
     """ Shuffles this deck, effectively reconstructing it. """
@@ -33,15 +43,15 @@ class Deck():
   
   def draw_card(self):
     """
-    Returns the next card this deck has to offer, or None if it
-    is empty.
+    Returns the next card this deck has to offer, or raises an
+    IndexError if it is exhausted of cards.
     """
     
     if not self.is_empty():
       drawn = self._cards[self._num_drawn]
       self._num_drawn += 1
       return drawn
-    return None
+    raise IndexError("The deck has been exhausted of cards.")
 
 
 # If deck.py is used as the program entry point, prints out a random
