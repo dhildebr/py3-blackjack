@@ -52,16 +52,19 @@ class Hand(object):
     own line).
     """
     
+    # Print the cards on to a line if there are fewer than four
+    if len(self._cards) < 4:
+      return "\n".join([str(crd) for crd in self._cards])
+    
     formatted_cards = []
     num_columns = 1
     
-    if len(self._cards) >= 4:
-      if len(self._cards) < 5:
-        num_columns = 2
-      elif len(self._cards) < 7:
-        num_columns = 3
-      else:
-        num_columns = 4
+    if len(self._cards) < 5:
+      num_columns = 2
+    elif len(self._cards) < 7:
+      num_columns = 3
+    else:
+      num_columns = 4
     
     for offset in range(0, len(self._cards), num_columns):
       max_subindex = min(len(self._cards) - offset, offset + num_columns)
@@ -140,19 +143,10 @@ class Hand(object):
 if __name__ == "__main__":
   example_deck = Deck()
   example_hand = Hand(example_deck)
-  print(example_hand, end = "\n\n")
+  print()
   
-  example_hand.draw_card(example_deck)
-  print(example_hand, end = "\n\n")
+  while len(example_hand) <= 8:
+    print(f"The hand has {len(example_hand)} cards.")
+    print(example_hand, end = "\n\n")
+    example_hand.draw_card(example_deck)
   
-  example_hand.draw_card(example_deck)
-  print(example_hand, end = "\n\n")
-  
-  example_hand.draw_card(example_deck)
-  print(example_hand, end = "\n\n")
-  
-  example_hand.draw_card(example_deck)
-  print(example_hand, end = "\n\n")
-  
-  example_hand.draw_card(example_deck)
-  print(example_hand, end = "\n\n")

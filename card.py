@@ -66,14 +66,6 @@ class Card(object):
       raise AttributeError(f"Attribute '{key}' cannot be overwritten.")
     super(Card, self).__setattr__(key, value)
   
-  def get_rank(self):
-    """ Returns this card's rank as a string. """
-    return self.rank
-  
-  def get_suit(self):
-    """ Returns this card's suit as a string. """
-    return self.suit
-  
   def is_ace(self):
     """ Returns whether this card is an ace. """
     return self._rank == "Ace"
