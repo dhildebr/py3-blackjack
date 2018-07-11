@@ -87,6 +87,11 @@ class Game(object):
     """
     
     self._player_hand.get_new_hand(self._src_deck)
+    if self._player_hand.is_blackjack():
+      print("Blackjack!")
+      print("The onus now falls to the dealer to one-up you.")
+      return False
+    
     while True:
       print(f"Your hand has a soft value of {self._player_hand.soft_value()}")
       print(f"Your hand has a hard value of {self._player_hand.hard_value()}")

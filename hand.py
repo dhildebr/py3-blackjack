@@ -133,7 +133,7 @@ class Hand(object):
   
   def is_blackjack(self):
     """ Returns whether this hand has a blackjack/natural. """
-    return len(self._cards) == 2 and self.optimal_value() == HAND_LIMIT
+    return len(self._cards) == HAND_START_SIZE and self.optimal_value() == HAND_LIMIT
   
   def is_bust(self):
     """ Returns whether this hand has a value above the hand limit. """
