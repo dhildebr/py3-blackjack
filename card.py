@@ -70,6 +70,10 @@ class Card(object):
     """ Returns whether this card is an ace. """
     return self._rank == "Ace"
   
+  def is_face_card(self):
+    """ Returns whether this card is a face card. """
+    return self.rank_ in ("Jack", "Queen", "King")
+  
   def __str__(self):
     """
     Returns a string representation of this playing card in the format
