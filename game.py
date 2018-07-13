@@ -95,11 +95,11 @@ class Game(object):
     while True:
       print(f"Your hand has a soft value of {self._player_hand.soft_value()}")
       print(f"Your hand has a hard value of {self._player_hand.hard_value()}")
-      print(f"You have {self._player_hand.num_aces()} aces, and your hand's "
-          "optimal value is {self._player_hand.optimal_value()}")
+      print("You have {} aces, and your hand's optimal value is {}".format(
+          self._player_hand.num_aces(), self._player_hand.optimal_value()))
       print(self._player_hand, end = "\n\n")
       
-      response_hit_stand = parse_reply_hit_stand("Do you wish to hit again, or stand?")
+      response_hit_stand = parse_reply_hit_stand("Do you wish to hit again, or stand? ")
       if response_hit_stand == "HIT":
         self._player_hand.draw_card(self._src_deck)
         if self._player_hand.is_bust():
@@ -109,3 +109,8 @@ class Game(object):
         print(f"You've stood with a hand worth {self._player_hand.optimal_value()} points")
         print("The onus now falls to the dealer to better your score.")
         return False
+
+
+if __name__ == "__main__":
+  example_game = Game()
+  example_game.build_player_hand()

@@ -68,7 +68,7 @@ class Card(object):
   
   def is_ace(self):
     """ Returns whether this card is an ace. """
-    return self._rank == "Ace"
+    return self.rank_ == "Ace"
   
   def is_face_card(self):
     """ Returns whether this card is a face card. """
