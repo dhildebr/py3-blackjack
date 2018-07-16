@@ -127,13 +127,16 @@ class Game(object):
     """
     Builds the dealer's hand automatically, standing on seventeen.
     Returns True if the dealer busts, or False if not. If the player's
-    hand has not yet been built this round, or if it has been but the
-    player has busted, this method has no effect and merely
-    returns None.
+    hand has not yet been built this round, this method has no effect
+    and merely returns None. If the player previously busted, the
+    dealer's hand will not be built, but this method will return False
+    as though it had been.
     """
     
-    if not self._have_built_hand_player or self._player_hand.is_bust():
+    if not self._have_built_hand_player:
       return None
+    elif self._player_hand.is_bust():
+      return False
     
     if self._dealer_hand is None:
       self._dealer_hand = Hand(self._src_deck)
