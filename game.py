@@ -127,11 +127,12 @@ class Game(object):
     """
     Builds the dealer's hand automatically, standing on seventeen.
     Returns True if the dealer busts, or False if not. If the player's
-    hand has not yet been built this round, this method has no effect
-    and merely returns None.
+    hand has not yet been built this round, or if it has been but the
+    player has busted, this method has no effect and merely
+    returns None.
     """
     
-    if not self._have_built_hand_player:
+    if not self._have_built_hand_player or self._player_hand.is_bust():
       return None
     
     if self._dealer_hand is None:
@@ -144,7 +145,7 @@ class Game(object):
       return False
     
     while self._dealer_hand.optimal_value() < DEALER_STAND_THRESHOLD:
-      self._dealer_hand.draw_card()
+      self._dealer_hand.draw_card(self._src_deck)
     if self._dealer_hand.is_bust():
       print("Praise the gods! The dealer has busted.", end = "\n\n")
       return True
@@ -157,3 +158,4 @@ class Game(object):
 if __name__ == "__main__":
   example_game = Game()
   example_game.build_player_hand()
+  example_game.build_dealer_hand()
