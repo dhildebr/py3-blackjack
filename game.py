@@ -15,6 +15,8 @@ REPLY_PATTERN_HIT =   r"(?i)^\s*(HIT(?: ME(?:,? BABY,? ONE MORE TIME)?)?)\s*$"
 REPLY_PATTERN_STAND = r"(?i)^\s*((?:(?:I )?STAND)|WOULD THE REAL \w+(?: \w+)* PLEASE STAND UP\??)\s*$"
 REPLY_PATTERN_MONEY = r"(?i)^\s*(\$?(\d+(?:\.\d\d)?))\s*$"
 
+DEALER_STAND_THRESHOLD = 17
+
 
 def parse_reply_yn(prompt):
   """
@@ -77,19 +79,28 @@ class Game(object):
   
   def __init__(self, starting_money = 100.00):
     self._src_deck = Deck()
-    self._player_hand = Hand(self._src_deck)
+    self._player_hand = None
+    self._dealer_hand = None
     self._player_money = starting_money
+    self._have_built_hand_player = False
+    self._have_built_hand_dealer = False
   
   def build_player_hand(self):
     """
     Builds the player's hand until they either bust or stand. Returns
-    True if the player busts in the process, of False if not.
+    True if the player busts in the process, of False if not. This
+    method must be called before build_dealer_hand in a given round.
     """
     
-    self._player_hand.get_new_hand(self._src_deck)
+    if self._player_hand is None:
+      self._player_hand = Hand(self._src_deck)
+    else:
+      self._player_hand.get_new_hand(self._src_deck)
+    
     if self._player_hand.is_blackjack():
       print("Blackjack!")
-      print("The onus now falls to the dealer to one-up you.")
+      print("The onus now falls to the dealer to one-up you.", end = "\n\n")
+      self._have_built_hand_player = True
       return False
     
     while True:
@@ -104,11 +115,43 @@ class Game(object):
         self._player_hand.draw_card(self._src_deck)
         if self._player_hand.is_bust():
           print("BUST!")
+          self._have_built_hand_player = True
           return True
       else:
         print(f"You've stood with a hand worth {self._player_hand.optimal_value()} points")
-        print("The onus now falls to the dealer to better your score.")
+        print("The onus now falls to the dealer to better your score.", end = "\n\n")
+        self._have_built_hand_player = True
         return False
+  
+  def build_dealer_hand(self):
+    """
+    Builds the dealer's hand automatically, standing on seventeen.
+    Returns True if the dealer busts, or False if not. If the player's
+    hand has not yet been built this round, this method has no effect
+    and merely returns None.
+    """
+    
+    if not self._have_built_hand_player:
+      return None
+    
+    if self._dealer_hand is None:
+      self._dealer_hand = Hand(self._src_deck)
+    else:
+      self._dealer_hand.get_new_hand(self._src_deck)
+    
+    if self._dealer_hand.is_blackjack():
+      print("The end is nigh! The dealer has drawn a blackjack.", end = "\n\n")
+      return False
+    
+    while self._dealer_hand.optimal_value() < DEALER_STAND_THRESHOLD:
+      self._dealer_hand.draw_card()
+    if self._dealer_hand.is_bust():
+      print("Praise the gods! The dealer has busted.", end = "\n\n")
+      return True
+    else:
+      print("The dealer stands. Their their hand is worth {} points.".format(
+          self._dealer_hand.optimal_value()), end = "\n\n")
+      return False
 
 
 if __name__ == "__main__":
