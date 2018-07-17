@@ -85,7 +85,7 @@ class Game(object):
     self._have_built_hand_player = False
     self._have_built_hand_dealer = False
   
-  def build_player_hand(self):
+  def _build_player_hand(self):
     """
     Builds the player's hand until they either bust or stand. Returns
     True if the player busts in the process, of False if not. This
@@ -123,7 +123,7 @@ class Game(object):
         self._have_built_hand_player = True
         return False
   
-  def build_dealer_hand(self):
+  def _build_dealer_hand(self):
     """
     Builds the dealer's hand automatically, standing on seventeen.
     Returns True if the dealer busts, or False if not. If the player's
@@ -136,6 +136,7 @@ class Game(object):
     if not self._have_built_hand_player:
       return None
     elif self._player_hand.is_bust():
+      self._have_built_hand_dealer = True
       return False
     
     if self._dealer_hand is None:
@@ -145,20 +146,73 @@ class Game(object):
     
     if self._dealer_hand.is_blackjack():
       print("The end is nigh! The dealer has drawn a blackjack.", end = "\n\n")
+      self._have_built_hand_dealer = True
       return False
     
     while self._dealer_hand.optimal_value() < DEALER_STAND_THRESHOLD:
       self._dealer_hand.draw_card(self._src_deck)
     if self._dealer_hand.is_bust():
       print("Praise the gods! The dealer has busted.", end = "\n\n")
+      self._have_built_hand_dealer = True
       return True
     else:
       print("The dealer stands. Their their hand is worth {} points.".format(
           self._dealer_hand.optimal_value()), end = "\n\n")
+      self._have_built_hand_dealer = True
       return False
+  
+  def has_player_won(self):
+    """
+    Returns whether the player has won. If the player has not busted and
+    their hand is more valuable than the dealer's, or if the player has
+    achieved blackjack and the dealer has not, then the player has won
+    the round. Both the player's and the dealer's hands must be built
+    for this round for anyone to have won.
+    """
+    
+    return (self._player_hand is not None and self._dealer_hand is not None
+        and self._have_built_hand_player and self._have_built_hand_dealer
+        and not self._player_hand.is_bust
+        and (self._player_hand.optimal_value() > self._dealer_hand.optimal_value()
+            or self._player_hand.is_blackjack() and not self._dealer_hand.is_blackjack())
+    )
+  
+  def is_tie(self):
+    """
+    Returns whether the current round is a tie. The game is tied if both
+    player and dealer have drawn, and their hands are of equal value,
+    and neither has achieveed a blackjack.
+    """
+    
+    return (self._player_hand is not None and self._dealer_hand is not None
+        and self._have_built_hand_player and self._have_built_hand_dealer
+        and not self._player_hand.is_blackjack()
+        and not self._dealer_hand.is_blackjack()
+    )
+  
+  def has_dealer_won(self):
+    """
+    Returns whether the dealer has won. If the dealer has drawn a hand
+    more valuable than the player's without busting, if the dealer has
+    achieveed a blackjack,, or if the player has busted and dealer has
+    not, then the dealer has won the round. Both the player's and the
+    dealer's hands must be built for this round for anyone to have won.
+    """
+    
+    return (self._player_hand is not None and self._dealer_hand is not None
+        and self._have_built_hand_player and self._have_built_hand_dealer
+        and not self._dealer_hand.is_bust()
+        and (self._dealer_hand.optimal_value() > self._player_hand.optimal_value()
+            or self._dealer_hand.is_blackjack()
+            or self._player_hand.is_bust())
+    )
+  
+  def play_round(self):
+    has_player_busted = self._build_player_hand()
+    has_dealer_busted = self._build_dealer_hand()
+    
 
 
 if __name__ == "__main__":
   example_game = Game()
-  example_game.build_player_hand()
-  example_game.build_dealer_hand()
+  example_game.play_round()
