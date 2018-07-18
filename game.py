@@ -133,16 +133,16 @@ class Game(object):
     as though it had been.
     """
     
+    if self._dealer_hand is None:
+      self._dealer_hand = Hand(self._src_deck)
+    else:
+      self._dealer_hand.get_new_hand(self._src_deck)
+    
     if not self._have_built_hand_player:
       return None
     elif self._player_hand.is_bust():
       self._have_built_hand_dealer = True
       return False
-    
-    if self._dealer_hand is None:
-      self._dealer_hand = Hand(self._src_deck)
-    else:
-      self._dealer_hand.get_new_hand(self._src_deck)
     
     if self._dealer_hand.is_blackjack():
       print("The end is nigh! The dealer has drawn a blackjack.", end = "\n\n")
@@ -170,11 +170,11 @@ class Game(object):
     for this round for anyone to have won.
     """
     
-    return (self._player_hand is not None and self._dealer_hand is not None
-        and self._have_built_hand_player and self._have_built_hand_dealer
+    return (self._have_built_hand_player and self._have_built_hand_dealer
         and not self._player_hand.is_bust
         and (self._player_hand.optimal_value() > self._dealer_hand.optimal_value()
-            or self._player_hand.is_blackjack() and not self._dealer_hand.is_blackjack())
+            or (self._player_hand.is_blackjack() and not self._dealer_hand.is_blackjack())
+            or self._dealer_hand.is_bust())
     )
   
   def is_tie(self):
@@ -184,8 +184,7 @@ class Game(object):
     and neither has achieveed a blackjack.
     """
     
-    return (self._player_hand is not None and self._dealer_hand is not None
-        and self._have_built_hand_player and self._have_built_hand_dealer
+    return (self._have_built_hand_player and self._have_built_hand_dealer
         and not self._player_hand.is_blackjack()
         and not self._dealer_hand.is_blackjack()
     )
@@ -199,20 +198,29 @@ class Game(object):
     dealer's hands must be built for this round for anyone to have won.
     """
     
-    return (self._player_hand is not None and self._dealer_hand is not None
-        and self._have_built_hand_player and self._have_built_hand_dealer
+    return (self._have_built_hand_player and self._have_built_hand_dealer
         and not self._dealer_hand.is_bust()
         and (self._dealer_hand.optimal_value() > self._player_hand.optimal_value()
             or self._dealer_hand.is_blackjack()
             or self._player_hand.is_bust())
     )
   
-  def play_round(self):
-    has_player_busted = self._build_player_hand()
-    has_dealer_busted = self._build_dealer_hand()
+  def play_round(self, bet_amt):
+    """
     
+    """
+    
+    self._build_player_hand()
+    self._build_dealer_hand()
+    
+    if self.has_player_won():
+      print("You are victorious!")
+    elif self.has_dealer_won():
+      print("You have lost!")
+    else:
+      print("It's a tie.")
 
 
 if __name__ == "__main__":
-  example_game = Game()
-  example_game.play_round()
+  example_game = Game(100.00)
+  example_game.play_round(20.00)
