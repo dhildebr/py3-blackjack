@@ -151,15 +151,16 @@ class Game(object):
     
     while self._dealer_hand.optimal_value() < DEALER_STAND_THRESHOLD:
       self._dealer_hand.draw_card(self._src_deck)
+    
     if self._dealer_hand.is_bust():
       print("Praise the gods! The dealer has busted.", end = "\n\n")
       self._have_built_hand_dealer = True
       return True
-    else:
-      print("The dealer stands. Their their hand is worth {} points.".format(
-          self._dealer_hand.optimal_value()), end = "\n\n")
-      self._have_built_hand_dealer = True
-      return False
+    
+    print("The dealer stands. Their their hand is worth {} points.".format(
+        self._dealer_hand.optimal_value()), end = "\n\n")
+    self._have_built_hand_dealer = True
+    return False
   
   def has_player_won(self):
     """
@@ -171,7 +172,7 @@ class Game(object):
     """
     
     return (self._have_built_hand_player and self._have_built_hand_dealer
-        and not self._player_hand.is_bust
+        and not self._player_hand.is_bust()
         and (self._player_hand.optimal_value() > self._dealer_hand.optimal_value()
             or (self._player_hand.is_blackjack() and not self._dealer_hand.is_blackjack())
             or self._dealer_hand.is_bust())
@@ -215,8 +216,12 @@ class Game(object):
     
     if self.has_player_won():
       print("You are victorious!")
+      self._player_money += bet_amt
+      print(f"You have won ${bet_amt}.")
     elif self.has_dealer_won():
       print("You have lost!")
+      self._player_money -= bet_amt
+      print(f"You have lost ${bet_amt}.")
     else:
       print("It's a tie.")
 
