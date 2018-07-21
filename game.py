@@ -206,9 +206,17 @@ class Game(object):
             or self._player_hand.is_bust())
     )
   
+  def player_money(self):
+    """ Returns the amount of money the player has. """
+    return self._player_money
+  
   def play_round(self, bet_amt):
     """
-    
+    Runs one round of blackjack with the provided bet. The player's
+    bet is returned twofold if they win, or lost if they lose. This
+    method does not handle asking the player how much they want to bet,
+    nor does it make additional commentary beyond that they have won,
+    lost, or tied and how much money they've gained or lost.
     """
     
     self._build_player_hand()
@@ -224,8 +232,3 @@ class Game(object):
       print(f"You have lost ${bet_amt}.")
     else:
       print("It's a tie.")
-
-
-if __name__ == "__main__":
-  example_game = Game(100.00)
-  example_game.play_round(20.00)
