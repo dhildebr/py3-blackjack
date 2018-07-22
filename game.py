@@ -11,12 +11,24 @@ from hand import Hand
 REPLY_PATTERN_YES = r"(?i)^\s*(Y(?:ES|EA)?)\s*$"
 REPLY_PATTERN_NO =  r"(?i)^\s*(N(?:O|AY)?)\s*$"
 
+REPLY_PATTERN_HELP = r"(?i)^\s*(H[EA]LP)\s*$"
+
 REPLY_PATTERN_HIT =   r"(?i)^\s*(HIT(?: ME(?:,? BABY,? ONE MORE TIME)?)?)\s*$"
 REPLY_PATTERN_STAND = r"(?i)^\s*((?:(?:I )?STAND)|WOULD THE REAL \w+(?: \w+)* PLEASE STAND UP\??)\s*$"
 REPLY_PATTERN_MONEY = r"(?i)^\s*(\$?(\d+(?:\.\d\d)?))\s*$"
 
 DEALER_STAND_THRESHOLD = 17
 
+
+def print_help():
+  """
+  Prints out the help file's contents.
+  """
+  
+  with open("help.txt", "r") as help_file:
+    print("\n" * 2)
+    print(help_file.read())
+    print("\n" * 2)
 
 def parse_reply_yn(prompt):
   """
@@ -32,7 +44,11 @@ def parse_reply_yn(prompt):
       return True
     elif re.match(REPLY_PATTERN_NO, reply_line):
       return False
-    print("Unrecognized input.", end = "\n\n")
+    elif re.match(REPLY_PATTERN_HELP, reply_line):
+      print_help()
+    else:
+      print("Unrecognized input.", end = "\n\n")
+    
     reply_line = input(prompt)
 
 def parse_reply_hit_stand(prompt):
@@ -50,7 +66,11 @@ def parse_reply_hit_stand(prompt):
       return "HIT"
     elif re.match(REPLY_PATTERN_STAND, reply_line):
       return "STAND"
-    print("Unrecognized input.", end = "\n\n")
+    elif re.match(REPLY_PATTERN_HELP, reply_line):
+      print_help()
+    else:
+      print("Unrecognized input.", end = "\n\n")
+    
     reply_line = input(prompt)
 
 def parse_reply_bet_amt(prompt):
@@ -66,9 +86,13 @@ def parse_reply_bet_amt(prompt):
     money_pattern_search = re.search(REPLY_PATTERN_MONEY, reply_line)
     if money_pattern_search:
       return float(money_pattern_search.group(2))
-    print("Unrecognized input. Money is formatted as a number with zero or two "
-        "decimal places, and an optional dollar sign: [$]##...#[.##].",
-        end = "\n\n")
+    elif re.match(REPLY_PATTERN_HELP, reply_line):
+      print_help()
+    else:
+      print("Unrecognized input. Money is formatted as a number with zero or two "
+          "decimal places, and an optional dollar sign: [$]##...#[.##].",
+          end = "\n\n")
+    
     reply_line = input(prompt)
 
 
@@ -188,6 +212,8 @@ class Game(object):
     return (self._have_built_hand_player and self._have_built_hand_dealer
         and not self._player_hand.is_blackjack()
         and not self._dealer_hand.is_blackjack()
+        and (self._player_hand.optimal_value() == self._dealer_hand.optimal_value()
+            or self._player_hand.is_bust() and self._dealer_hand.is_bust())
     )
   
   def has_dealer_won(self):

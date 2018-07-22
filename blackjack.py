@@ -15,5 +15,5 @@ if __name__ == "__main__":
     bet_amt = parse_reply_bet_amt("How much would you like to bet? ")
     blackjack.play_round(bet_amt)
     
-    print(f"You have ${blackjack.player_money()} remaining")
+    print(f"You have ${blackjack.player_money()} remaining.")
     continue_game = parse_reply_yn("Do you want to play again? ")

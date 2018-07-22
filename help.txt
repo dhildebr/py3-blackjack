@@ -1,0 +1,35 @@
+Before each round of Blackjack, you will be asked how much of your money you
+want to bet. You can input any dollar amount, with or without a dollar sign or
+decimal places. If you win that round, your bet will be doubled; if you lose, it
+will be lost. Ties will simply return your money.
+
+At the start of each round you will draw two cards: you can opt to draw another,
+or to stick with what you have. Your goal is to build a hand of a value as close
+as possible to 21 without going over, i.e. without busting. Aces have a value of
+11, unless that would cause you to go over 21, in which case as many aces are
+reduces to their "soft" value of 1 as is necessary to bring you under 21. Face
+cards (e.g. the jack or king) are worth 10 points.
+
+To draw another card, type any of:
+    - Hit
+    - Hit me
+    - Hit me, baby, one more time
+
+To stop building your hand, type any of:
+    - Stand
+    - I stand
+    - Would the real Jim Shady please stand up?
+
+If your hand is more valuable than what the dealer is able to build (the dealer
+will alwys stand on a value of 17 or greater), then you will win the round. If
+you bust but the dealer does not, you lose. If you the dealer busts and you
+don't you win. If both of you bust, a tie is called.
+
+Additionally, there is the conditon of blackjack: when someone draws an initial
+two-card hand worth exactly 21 points. If you draw a blackjack hand, then you
+will immediately win, unless the dealer also draws a blackjack, in which case
+you will lose.
+
+After each round you will prompted on whether you wish to continue playing.
+
+Any time you are asked for input, type "help" to bring up this information agin.
